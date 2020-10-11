@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { UserTable } from './UserTable';
@@ -60,12 +60,12 @@ function App() {
 
   const [users, setUsers] = useState(initialUsersState);
 
-  function addUser(user) {
+  function addUser(user : any) {
     user.id = users.length + 1;
     setUsers([...users, user]);
   }
 
-  const updateUser = (id, updatedUser) => {
+  const updateUser = (id : any, updatedUser : any) => {
     setUsers(users.map(user => (user.id === id ? updatedUser : user)));
 	}
   
