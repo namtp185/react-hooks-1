@@ -1,9 +1,11 @@
-import React, { FC, useState } from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 import { UserTable } from './UserTable';
+import User from './User';
+import { UserProps } from 'UserProps';
 
-let initialUsersState = [
+
+let initialUsersState : User[] = [
   {
     id: 1,
     email: "go@gmail.com",
@@ -60,22 +62,21 @@ function App() {
 
   const [users, setUsers] = useState(initialUsersState);
 
-  function addUser(user : any) {
-    user.id = users.length + 1;
-    setUsers([...users, user]);
-  }
-
-  const updateUser = (id : any, updatedUser : any) => {
-    setUsers(users.map(user => (user.id === id ? updatedUser : user)));
+  const updateUser = (id : number, updatedUser : User) => {
+    const new_users : User[] = (users.map(user => (user.id === id ? updatedUser : user)));
+    setUsers(new_users);
+    return new_users;
 	}
   
+  const props : UserProps = {users: users, updateUser: updateUser, currentUser: initialUsersState[0]} ;
 
   return (
     <div className="App">
       <UserTable 
-      users={users} 
-      updateUser={updateUser}
-      currentUser={initialUsersState[0]}
+      // users={users} 
+      // updateUser={updateUser}
+      // currentUser={initialUsersState[0]}
+      {...props}
       >
 
       </UserTable>

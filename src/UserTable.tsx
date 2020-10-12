@@ -1,11 +1,12 @@
-import React, {Component, useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect, useRef, MouseEvent } from "react";
+import User from "./User";
+import { UserProps } from './UserProps';
 
-export const UserTable = (props) => {
+export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
 
-  const [ user, setUser ] = useState(props.currentUser);
-  const emailRef = useRef();
-  const nameRef = useRef();
+  const [ user, setUser ] = useState(currentUser);
+  const emailRef = useRef(null);
+  const nameRef = useRef(null);
 
   const test = () => {
     // `current` points to the mounted text input element
@@ -13,7 +14,7 @@ export const UserTable = (props) => {
       return;
     }
     // console.log(ReactDOM.findDOMNode(nameRef.current));
-    ReactDOM.findDOMNode(nameRef.current).setAttribute('value', 'hihi'); // nameRef.current.value = 'hihi'
+    // ReactDOM.findDOMNode(nameRef.current).setAttribute('value', 'hihi'); // nameRef.current.value = 'hihi'
   };
 
   // const user = {
@@ -21,18 +22,18 @@ export const UserTable = (props) => {
   //   email: "hihi@gmail.com",
   //   name: "hihi"
   // }
-  const handleInputChange = event => {
-    const { name, value } = event.target;
+  const handleInputChange = (event : MouseEvent<HTMLInputElement>) => {
+    // const { name, value } = event.target;
     console.log(event.target);
-    console.log(name, value);
-    setUser({ ...user, [name]: value });
+    // console.log(name, value);
+    // setUser({ ...user, [name]: value });
   }
   
   useEffect(
     () => {
-      setUser(props.currentUser)
+      setUser(currentUser)
     },
-    [ props ]
+    [ {currentUser} ]
   );
 
   useEffect(() => {
@@ -48,7 +49,8 @@ export const UserTable = (props) => {
   //   // console.log(users);
   // }
 
-  const fillText = (user) => {
+  const fillText = (user : User) => {
+    console.log(user);
     // console.log(emailRef);
     // emailRef.value = user.email;
     // input.value = user.email;
@@ -65,9 +67,9 @@ export const UserTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.users.length > 0 ? (
-          props.users.map(user => (
-            <tr key={user.id} onClick={fillText(user)}>
+        {users.length > 0 ? (
+          users.map((user : User) => (
+            <tr key={user.id} onClick={() => fillText(user)}>
               <td>{user.email}</td>
               <td>{user.name}</td>
               <td>
@@ -96,15 +98,15 @@ export const UserTable = (props) => {
 onSubmit={event => {
   // props.addUser(user);
   event.preventDefault();
-  props.updateUser(user.id, user);
+  updateUser(user.id, user);
 }}
 >
 <label>Email</label>
-<input ref={emailRef} type="text" name="email" value={user.email} onChange={handleInputChange} />
+<input ref={emailRef} type="text" name="email" value={user.email} onChange={() => handleInputChange} />
 <label>Name</label>
-<input ref={nameRef} type="text" name="name" value={user.name} onChange={handleInputChange} />
+<input ref={nameRef} type="text" name="name" value={user.name} onChange={() => handleInputChange} />
 <button>Edit user</button>
-<button onClick={test()}>Test</button>
+<button onClick={() => test}>Test</button>
 </form>
 </div>
   )
