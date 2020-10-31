@@ -4,6 +4,11 @@ import { UserTable } from './UserTable';
 import User from './User';
 import { UserProps } from 'UserProps';
 
+let initialUserForm : User = {
+  id: 0,
+  email: '',
+  name: ''
+}
 
 let initialUsersState : User[] = [
   {
@@ -68,7 +73,7 @@ function App() {
     return new_users;
 	}
   
-  const props : UserProps = {users: users, updateUser: updateUser, currentUser: initialUsersState[0]} ;
+  const props : UserProps = {users: users, updateUser: updateUser, currentUser: initialUserForm} ;
 
   return (
     <div className="App">

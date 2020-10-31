@@ -27,11 +27,7 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
   const handleInputChange = (event : ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
     console.log(name, value);
-    // console.log(event.currentTarget.name);
-    setUser({ ...user, [name]: value });
-    console.log(user);
-    // console.log(event.target);
-    // console.log(name, value);
+    currentUser[name] = value;
   }
   
   useEffect(
@@ -45,6 +41,10 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
   useLayoutEffect(() => {
     console.log(emailRef);
     console.log(nameRef);
+    if(nameRef.current !== null) {
+      const name = nameRef.current.value;
+      setUser({...user, name: name});
+    }
   });
 
   // const addUser = (user) => {
@@ -56,14 +56,18 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
   //   // console.log(users);
   // }
 
+  // update selected user id and input value
   const fillText = (user : User) => {
     // console.log(user);
     // console.log(emailRef);
+    currentUser.id = user.id;
     if(emailRef.current !== null) {
       emailRef.current.value = user.email;
+      currentUser.email = user.email;
     }
     if(nameRef.current !== null) {
       nameRef.current.value = user.name;
+      currentUser.name = user.name;
     }
   }
 
@@ -109,7 +113,8 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
 onSubmit={event => {
   // props.addUser(user);
   event.preventDefault();
-  updateUser(user.id, user);
+  console.log(ReactDOM.findDOMNode(nameRef.current))
+  updateUser(currentUser.id, currentUser);
 }}
 >
 <label>Email</label>
