@@ -1,19 +1,21 @@
-import React, { useState, useEffect, useRef, MouseEvent } from "react";
+import React, { useState, useEffect, useRef, MouseEvent, ChangeEvent, useLayoutEffect } from "react";
+import ReactDOM from "react-dom";
 import User from "./User";
 import { UserProps } from './UserProps';
 
 export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
 
-  const [ user, setUser ] = useState(currentUser);
-  const emailRef = useRef(null);
-  const nameRef = useRef(null);
+  const [ user, setUser ] = useState<User>(currentUser);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  const test = () => {
+  const test = (event: MouseEvent<HTMLButtonElement>) => {
     // `current` points to the mounted text input element
+    console.log(event.target);
     if(!nameRef.current) {
       return;
     }
-    // console.log(ReactDOM.findDOMNode(nameRef.current));
+    console.log(ReactDOM.findDOMNode(nameRef.current));
     // ReactDOM.findDOMNode(nameRef.current).setAttribute('value', 'hihi'); // nameRef.current.value = 'hihi'
   };
 
@@ -22,11 +24,14 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
   //   email: "hihi@gmail.com",
   //   name: "hihi"
   // }
-  const handleInputChange = (event : MouseEvent<HTMLInputElement>) => {
-    // const { name, value } = event.target;
-    console.log(event.target);
+  const handleInputChange = (event : ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    console.log(name, value);
+    // console.log(event.currentTarget.name);
+    setUser({ ...user, [name]: value });
+    console.log(user);
+    // console.log(event.target);
     // console.log(name, value);
-    // setUser({ ...user, [name]: value });
   }
   
   useEffect(
@@ -36,8 +41,10 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
     [ {currentUser} ]
   );
 
-  useEffect(() => {
-
+  // https://linguinecode.com/post/how-to-use-react-useref-with-typescript
+  useLayoutEffect(() => {
+    console.log(emailRef);
+    console.log(nameRef);
   });
 
   // const addUser = (user) => {
@@ -50,10 +57,14 @@ export const UserTable = ({users, currentUser, updateUser} : UserProps) => {
   // }
 
   const fillText = (user : User) => {
-    console.log(user);
+    // console.log(user);
     // console.log(emailRef);
-    // emailRef.value = user.email;
-    // input.value = user.email;
+    if(emailRef.current !== null) {
+      emailRef.current.value = user.email;
+    }
+    if(nameRef.current !== null) {
+      nameRef.current.value = user.name;
+    }
   }
 
   return (
@@ -102,11 +113,11 @@ onSubmit={event => {
 }}
 >
 <label>Email</label>
-<input ref={emailRef} type="text" name="email" value={user.email} onChange={() => handleInputChange} />
+<input ref={emailRef} type="text" name="email" defaultValue={user.email} onChange={(e : ChangeEvent<HTMLInputElement>) => handleInputChange(e)} />
 <label>Name</label>
-<input ref={nameRef} type="text" name="name" value={user.name} onChange={() => handleInputChange} />
+<input ref={nameRef} type="text" name="name" defaultValue={user.name} onChange={handleInputChange} />
 <button>Edit user</button>
-<button onClick={() => test}>Test</button>
+<button onClick={(e : MouseEvent<HTMLButtonElement>) => test(e)}>Test</button>
 </form>
 </div>
   )

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "incremental": true,
+    // "incremental": true,
     "outDir": "build/lib",
     "target": "es5",
     "module": "esnext",
